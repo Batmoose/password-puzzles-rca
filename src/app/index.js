@@ -5,7 +5,7 @@ const pagesreq = require.context('./pages', true, /\.\/[^/.]+[/.]$/)
 const pages = pagesreq
   .keys()
   .map((key, i) =>
-    <Route path={key.slice(1, -1)} key={i} component={pagesreq(key).default} />
+    <Route path={key.slice(1, -1)} key={key} component={pagesreq(key).default} />
   )
 export default (props) =>
   <Route render={({ location }) =>
@@ -13,7 +13,7 @@ export default (props) =>
       <CSSTransition key={location.key} className='fade' timeout={300}>
         <Switch location={location}>
           {pages}
-          <Redirect to='/workshop' />
+          <Redirect key={'last'} to='/workshop' />
         </Switch>
       </CSSTransition>
     </TransitionGroup>

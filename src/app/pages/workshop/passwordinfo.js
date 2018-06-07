@@ -2,7 +2,7 @@ import React from 'react'
 import { Segment, Label, Icon, Container, Header } from 'semantic-ui-react'
 const PasswordInfo = ({ word, icon, labelContent, color }) =>
   <Segment attached size='large'>
-    <Label color={color} ribbon>
+    <Label color={color} size='small' ribbon>
       <Icon name={icon} />
       {labelContent}
     </Label>
@@ -12,7 +12,11 @@ const PasswordInfo = ({ word, icon, labelContent, color }) =>
 PasswordInfo.Group = ({ info, crackTime, isSecure, ...props }) => {
   return (
     <Container>
-      <Header color={isSecure ? 'green' : 'red'}>Your password would take {crackTime} to crack. Here is a breakdown:</Header>
+      {
+        !info.password.length
+          ? <Header size='tiny'>Start typing to see a breakdown of your passsword</Header>
+          : <Header size='tiny' color={isSecure ? 'green' : 'red'}>Your password {isSecure ? 'is' : "isn't"} secure</Header>
+      }
       <Segment.Group {...props}>{
         info.sequence.map((details, i) =>
           <PasswordInfo key={i} {...patternMap[details.pattern](details)} />
@@ -41,7 +45,7 @@ const patternMap = {
   },
   spatial ({ token }) {
     return {
-      icon: 'keyboard alternate outline',
+      icon: 'keyboard outline',
       labelContent: 'close keys',
       color: 'red',
       word: token

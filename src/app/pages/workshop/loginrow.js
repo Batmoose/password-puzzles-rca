@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
-import { Grid } from 'semantic-ui-react'
+import { Grid, Header } from 'semantic-ui-react'
 import PasswordInfo from './passwordinfo'
-import SignupBlock from './signupbloxk'
+import SignupBlock from './signupblock'
 import LoginStep from './loginstep'
 import zxcvbn from 'zxcvbn'
 export default class extends Component {
   getInfo (e) {
-    const info = zxcvbn(this.props.password)
+    const info = zxcvbn(this.props.password, this.props.userDict)
     const crackTime = info.guesses_log10 - this.props.logSpeed
-    const isSecure = crackTime > this.props.logThreshold
+    // const isSecure = crackTime > this.props.logThreshold
+    const isSecure = info.score === 4
     return { info, isSecure, crackTime }
   }
   render () {
@@ -19,50 +20,56 @@ export default class extends Component {
       attempt,
       onUsernameChange,
       onPasswordChange,
-      onInsecureSubmit,
-      onSecureSubmit,
+      onSignupSubmit,
       onLoginSubmit,
       onAttemptChange,
       onSignupClick,
       onLoginClick,
-      disabled
+      state,
+      logSpeed,
+      logThreshold
     } = this.props
     const info = this.getInfo()
     return (
       <React.Fragment>
         <Grid.Row>
-          <Grid.Column width={5}>
+          <Grid.Column width={7}>
             <SignupBlock
               step={`${step}.1`}
-              disabled={disabled}
+              disabled={state === 1 || state === 2}
               isSecure={info.isSecure}
               username={username}
               password={password}
               onUsernameChange={onUsernameChange}
               onPasswordChange={onPasswordChange}
-              onSecureSubmit={onSecureSubmit}
-              onInsecureSubmit={onInsecureSubmit}
+              onSecureSubmit={onSignupSubmit}
+              onInsecureSubmit={() => {}}
               onClick={onSignupClick}
-            />
+              logSpeed={logSpeed}
+              logThreshold={logThreshold}
+            >
+              <PasswordInfo.Group {...info} horizontal />
+            </SignupBlock>
           </Grid.Column>
-          <Grid.Column width={5}>
+
+          <Grid.Column width={7}>
             <LoginStep
+              inverted={state === 1}
+              instruction={'Login'}
+              color={'orange'}
               step={`${step}.2`}
-              disabled={!disabled}
+              disabled={state === 0 || state === 2}
               username={username}
               password={attempt}
               onUsernameChange={onUsernameChange}
               onPasswordChange={onAttemptChange}
               onClick={onLoginClick}
               onSubmit={onLoginSubmit}
-            />
+            >
+              <Header size='tiny'>Login with the correct password</Header>
+            </LoginStep>
           </Grid.Column>
         </Grid.Row>
-        <Grid.Row>
-          <Grid.Column width={10}>
-            <PasswordInfo.Group {...info} />
-          </Grid.Column>
-        </Grid.Row >
       </React.Fragment>
     )
   }

@@ -14,20 +14,26 @@ export default class extends Component {
       onPasswordChange,
       username,
       password,
-      onClick
+      onClick,
+      logSpeed,
+      logThreshold,
+      children
     } = this.props
     return (
       <LoginStep
         disabled={disabled}
         step={step}
+        logSpeed={logSpeed}
+        logThreshold={logThreshold}
         color={'teal'}
         instruction={'Sign up'}
-        onUsernameChange={e => onUsernameChange(e.target.value)}
-        onPasswordChange={e => onPasswordChange(e.target.value)}
+        onUsernameChange={onUsernameChange}
+        onPasswordChange={onPasswordChange}
         onSubmit={this.handleSubmit.bind(this)}
         usernameValue={username}
         passwordValue={password}
         onClick={onClick}
+        children={children}
       />
     )
   }

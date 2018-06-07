@@ -10,9 +10,10 @@ export default ({
   onUsernameChange,
   onPasswordChange,
   onSubmit,
-  usernameValue,
-  passwordValue,
-  onClick
+  username,
+  password,
+  onClick,
+  inverted
 }) =>
   <React.Fragment>
     <Segment attached raised={!disabled} disabled={disabled} onClick={onClick}>
@@ -25,19 +26,19 @@ export default ({
           autoComplete='off'
           disabled={disabled}
           spellCheck={false}
-          value={usernameValue}
-          onChange={onUsernameChange} />
+          value={username}
+          onChange={e => onUsernameChange(e.target.value)} />
         <Login.Password
           autoComplete='off'
           disabled={disabled}
           spellCheck={false}
           type={disabled ? 'password' : 'text'}
-          value={passwordValue}
-          onChange={onPasswordChange} />
+          value={password}
+          onChange={e => onPasswordChange(e.target.value)} />
         <Button disabled={disabled}>Submit</Button>
       </Login>
     </Segment>
-    <Segment attached disabled={disabled} color={color} size='large'>
-      {(disabled && <br />) || children}
+    <Segment attached disabled={disabled} color={color}>
+      {disabled ? '' : children}
     </Segment>
   </React.Fragment>
